@@ -97,6 +97,26 @@ MSUConnection.prototype.compareModVersions = function (_modVersionData)
 
 MSUConnection.prototype.showModUpdates = function (_modVersionData)
 {
+	var transformText = function(_text)
+	{
+		// Change line ending to <br>, replace # markdown with <h> tags, replace markdown links with clickable spans
+		var asLines = _text.split(/\r?\n/);
+		var ret = "";
+		for (var i = 0; i < asLines.length; i++) {
+			var line = asLines[i];
+			var hashCount = 0;
+			for (var j = 0; j < line.length - 1; j++) {
+				if (line[j] == "#") hashCount++
+				else break
+			}
+			if (hashCount > 0) line = "<h" + hashCount + ">" + line.slice(hashCount) + "</h" + hashCount + ">";
+			else line += "<br>";
+			line = line.replace(/\[(.+)\]\((.+)\)/g, '<span class="msu-popup-link" onclick="openURL(\'$2\')">$1</a>'); // replace link with onClick element to open in browser
+			ret += line;
+		}
+		return ret;
+	}
+
 	var self = this;
 	var numUpdates = 0;
 	var numNew = 0;
@@ -136,12 +156,25 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 			});
 		})
 
-		// Add update text
+		// Add update patch notes, with a click handler to show/hide them
 		if (updateInfo.changes)
 		{
+			var neatText = transformText(updateInfo.changes);
+			var patchNotesInfoRow = $('<div class="text-font-normal">Click to hide patch notes</div>')
+				.appendTo(modInfoContainer);
 			var descriptionRow = $('<div class="msu-mod-info-description description-font-normal font-color-description"/>')
-				.html(updateInfo.changes.replace(/(?:\r\n|\r|\n)/g, '<br>'))
-				.appendTo(modInfoContainer)
+				.html(neatText)
+				.appendTo(modInfoContainer);
+			modInfoContainer.click(function(){
+				if (descriptionRow.html() == ""){
+					patchNotesInfoRow.text("Click to hide patch notes");
+					descriptionRow.html(neatText);
+				}
+				else {
+					patchNotesInfoRow.text("Click to show patch notes");
+					descriptionRow.html("");
+				}
+			})
 		}
 		MSU.Popup.addListContent(modInfoContainer)
 	});
