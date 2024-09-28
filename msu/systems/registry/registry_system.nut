@@ -65,6 +65,11 @@
 
 	function checkIfModVersionsAreNew( _modVersionData )
 	{
+		local storedInfo = {};
+		if (::MSU.Mod.PersistentData.hasFile("StoredModUpdates"))
+		{
+			storedInfo = ::MSU.Mod.PersistentData.readFile("StoredModUpdates");
+		}
 		local modInfos = {};
 		foreach (modID, modData in _modVersionData)
 		{
@@ -89,13 +94,17 @@
 				updateType = type,
 				changes = release.Changes,
 				sources = {},
+				isNew = true
 			};
+			modInfos[modID].UpdateInfo.isNew = !(modID in storedInfo) || (storedInfo[modID].UpdateInfo.availableVersion != modInfos[modID].UpdateInfo.availableVersion);
 			foreach (modSource in mod.Registry.__ModSources)
 			{
 				local sourceKey = ::MSU.System.Registry.ModSourceDomain.getKeyForValue(modSource.ModSourceDomain);
 				modInfos[modID].UpdateInfo.sources[sourceKey] <- {URL = modSource.getURL(), icon = modSource.Icon};
 			}
 		}
+		// rate limit handling; would actually need to check for rate limits... But I suppose not many players will hit that.
+		if (modInfos.len() > 0) ::MSU.Mod.PersistentData.createFile("StoredModUpdates", modInfos);
 		return modInfos;
 	}
 

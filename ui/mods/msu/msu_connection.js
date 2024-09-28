@@ -99,6 +99,7 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 {
 	var self = this;
 	var numUpdates = 0;
+	var numNew = 0;
 	var numMods = Object.keys(_modVersionData).length
 	$.each(_modVersionData, function (_modID, _modInfo)
 	{
@@ -106,6 +107,7 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 			return;
 		numUpdates++;
 		var updateInfo = _modInfo.UpdateInfo;
+		if (updateInfo.isNew) numNew++;
 		var modInfoContainer = $('<div class="msu-mod-info-container"/>');
 		var nameRow = $('<div class="msu-mod-name-row title title-font-big font-bold font-color-title">' + updateInfo.name + '</div>')
 			.appendTo(modInfoContainer)
@@ -148,7 +150,7 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 	var checkText = "" + numMods + (numMods == 1 ? " mod" : " mods") + " checked<br>";
 	checkText += numUpdates + (numUpdates == 1 ? " update" : " updates");
 	MSU.Popup.setSmallContainerInfo(checkText);
-	MSU.Popup.setState(MSU.Popup.mState.Small);
+	MSU.Popup.setState(numNew > 0 ? MSU.Popup.mState.Full : MSU.Popup.mState.Small);
 }
 
 // this should be reworked if/when we added JS side settings callbacks
