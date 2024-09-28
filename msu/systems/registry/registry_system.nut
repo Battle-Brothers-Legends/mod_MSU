@@ -57,7 +57,7 @@
 		{
 			if (mod.Registry.hasUpdateSource())
 			{
-				ret[mod.getID()] <- mod.Registry.getUpdateSource().getUpdateURL();
+				ret[mod.getID()] <- mod.Registry.getUpdateSource().getUpdateCheckURL();
 			}
 		}
 		return ret;
@@ -100,7 +100,8 @@
 			foreach (modSource in mod.Registry.__ModSources)
 			{
 				local sourceKey = ::MSU.System.Registry.ModSourceDomain.getKeyForValue(modSource.ModSourceDomain);
-				modInfos[modID].UpdateInfo.sources[sourceKey] <- {URL = modSource.getURL(), icon = modSource.Icon};
+				local targetURL = modSource.getTargetURL();
+				modInfos[modID].UpdateInfo.sources[sourceKey] <- {URL = targetURL == null ? modSource.getBaseURL() : targetURL, icon = modSource.Icon};
 			}
 		}
 		// rate limit handling; would actually need to check for rate limits... But I suppose not many players will hit that.
