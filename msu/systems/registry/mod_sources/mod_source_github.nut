@@ -4,6 +4,7 @@
 	static Regex = regexp("https:\\/\\/github\\.com\\/([-\\w]+)\\/([-\\w]+)");
 	static BadURLMessage = "A GitHub link must be a link to a specific repository, e.g. 'https://github.com/MSUTeam/MSU' Check to make sure there's not an issue with your URL and that it is formatted the same way as the MSU URL.";
 	static Icon = "github";
+	DirectDownload = true;
 
 	function setUpdateCheckURL()
 	{
@@ -13,7 +14,8 @@
 
 	function setTargetURL(_data)
 	{
-		this.__TargetURL = _data.html_url;
+		if (this.DirectDownload && _data.assets.len() > 0) this.__TargetURL = _data.assets[0].browser_download_url;
+		else this.__TargetURL = _data.html_url;
 	}
 
 	function extractRelease(_data)
