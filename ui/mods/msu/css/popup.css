@@ -130,6 +130,17 @@
 	height: 3.2rem;
 }
 
+.msu-mod-info-container .msu-popup-is-new-symbol
+{
+	width: 2rem;
+	height: 2rem;
+	position:absolute;
+	top: 0;
+	right: 0;
+	background-image: url("coui://gfx/ui/icons/special.png");
+	background-size: 100% 100%;
+}
+
 .msu-mod-info-container .ui-control.button,
 .msu-mod-info-container .ui-control.button[disabled]
 {

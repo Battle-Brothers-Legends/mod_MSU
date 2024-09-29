@@ -86,7 +86,7 @@ MSUPopup.prototype.addMessage = function (_info)
 
 MSUPopup.prototype.addListContent = function (_content)
 {
-	this.mListScrollContainer.append(_content)
+	this.mListScrollContainer.prepend(_content);
 }
 
 MSUPopup.prototype.setTitle = function (_content)

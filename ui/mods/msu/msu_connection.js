@@ -119,15 +119,15 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 
 	var self = this;
 	var numUpdates = 0;
-	var numNew = 0;
+	var hasNew = false;
 	var numMods = Object.keys(_modVersionData).length
+	var objectsToAdd = [];
 	$.each(_modVersionData, function (_modID, _modInfo)
 	{
 		if (_modInfo.UpdateInfo === undefined)
 			return;
 		numUpdates++;
 		var updateInfo = _modInfo.UpdateInfo;
-		if (updateInfo.isNew) numNew++;
 		var modInfoContainer = $('<div class="msu-mod-info-container"/>');
 		var nameRow = $('<div class="msu-mod-name-row title title-font-big font-bold font-color-title">' + updateInfo.name + '</div>')
 			.appendTo(modInfoContainer)
@@ -176,14 +176,32 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 				}
 			})
 		}
-		MSU.Popup.addListContent(modInfoContainer)
+		// New patches up top, old patches bottom
+		if (updateInfo.isNew)
+		{
+			var isNewSymbol = $('<div class="msu-popup-is-new-symbol"/>')
+				.appendTo(modInfoContainer);
+			objectsToAdd.push(modInfoContainer);
+			hasNew = true;
+		}
+		else
+		{
+			objectsToAdd.splice(0, 0, modInfoContainer);
+		}
 	});
+
 	if (numUpdates == 0)
 		return;
+
+	$.each(objectsToAdd, function(_, _modInfoContainer){
+		MSU.Popup.addListContent(_modInfoContainer)
+	})
+	delete objectsToAdd;
+
 	var checkText = "" + numMods + (numMods == 1 ? " mod" : " mods") + " checked<br>";
 	checkText += numUpdates + (numUpdates == 1 ? " update" : " updates");
 	MSU.Popup.setSmallContainerInfo(checkText);
-	MSU.Popup.setState(numNew > 0 ? MSU.Popup.mState.Full : MSU.Popup.mState.Small);
+	MSU.Popup.setState(hasNew ? MSU.Popup.mState.Full : MSU.Popup.mState.Small);
 }
 
 // this should be reworked if/when we added JS side settings callbacks
