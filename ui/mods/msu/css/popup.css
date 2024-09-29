@@ -93,13 +93,13 @@
 	overflow: hidden;
 	position: relative;
 	color: #dda21f;
-	padding-top: 1.5rem;
-
-	background-image: url("coui://gfx/ui/skin/list_item_03.png");
-	background-size: 100% 100%;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+	border: 10px solid transparent;
+	border-image: url("coui://gfx/ui/skin/list_item_03.png") 10 fill  stretch;
 }
 
 .msu-mod-info-container > div
@@ -108,12 +108,12 @@
 	height: auto;
 	overflow:auto;
 	word-wrap: break-word;
-	margin-bottom: 1.5rem;
 }
 .msu-mod-info-description h1,
 .msu-mod-info-description h2,
 .msu-mod-info-description h3,
-.msu-mod-info-description h4
+.msu-mod-info-description h4,
+.msu-mod-info-description h5
 {
 	margin: 0;
 }

@@ -103,9 +103,9 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 		var asLines = _text.split(/\r?\n/);
 		var ret = "";
 		for (var i = 0; i < asLines.length; i++) {
-			var line = asLines[i];
+			var line = asLines[i].trim();
 			var hashCount = 0;
-			for (var j = 0; j < line.length - 1; j++) {
+			for (var j = 0; j < line.length; j++) {
 				if (line[j] == "#") hashCount++
 				else break
 			}
@@ -160,7 +160,7 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 		if (updateInfo.changes)
 		{
 			var neatText = transformText(updateInfo.changes);
-			var patchNotesInfoRow = $('<div class="text-font-normal">Click to hide patch notes</div>')
+			var patchNotesInfoRow = $('<div class="description-font-normal font-color-description">Click to hide patch notes</div>')
 				.appendTo(modInfoContainer);
 			var descriptionRow = $('<div class="msu-mod-info-description description-font-normal font-color-description"/>')
 				.html(neatText)
