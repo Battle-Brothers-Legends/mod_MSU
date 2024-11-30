@@ -89,7 +89,7 @@
 
 	q.onMovementFinished <- function( _tile )
 	{
-		this.callSkillsFunction("onMovementFinished", [
+		this.callSkillsFunctionWhenAlive("onMovementFinished", [
 			_tile
 		]);
 	}
@@ -108,7 +108,7 @@
 		// to crashes if any skill tries to access the current tile in its onUpdate
 		// function as the tile at this point is not a valid tile.
 
-		this.callSkillsFunction("onAnySkillExecuted", [
+		this.callSkillsFunctionWhenAlive("onAnySkillExecuted", [
 			_skill,
 			_targetTile,
 			_targetEntity,
@@ -189,7 +189,7 @@
 
 	q.onOtherActorDeath <- function( _killer, _victim, _skill, _deathTile, _corpseTile, _fatalityType )
 	{
-		this.callSkillsFunction("onOtherActorDeath", [
+		this.callSkillsFunctionWhenAlive("onOtherActorDeath", [
 			_killer,
 			_victim,
 			_skill,
