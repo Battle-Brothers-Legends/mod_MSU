@@ -219,6 +219,7 @@
 
 	q.onMovementStep <- function( _tile, _levelDifference )
 	{
+		return true;
 	}
 
 	q.onAfterDamageReceived <- function()

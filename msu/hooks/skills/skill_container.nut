@@ -96,10 +96,44 @@
 
 	q.onMovementStep <- function( _tile, _levelDifference )
 	{
-		this.callSkillsFunction("onMovementStep", [
-			_tile,
-			_levelDifference
-		], false);
+		local wasUpdating = this.m.IsUpdating;
+		this.m.IsUpdating = true;
+		this.m.IsBusy = false;
+		this.m.BusyStack = 0;
+
+		local canMove = true;
+		local isRefunding = false;
+
+		foreach (skill in this.m.Skills)
+		{
+			if (!skill.isGarbage())
+			{
+				switch (_skill.onMovementStep(_tile, _levelDifference))
+				{
+					case true:
+						continue;
+
+					case false:
+						canMove = false;
+						break;
+
+					case null:
+						canMove = false;
+						isRefunding = true;
+						break;
+
+					default:
+						::logError("onMovementStep must return true, false, or null");
+						throw "invalid return value";
+				}
+			}
+		}
+
+		this.m.IsUpdating = wasUpdating;
+
+		if (isRefunding) this.m.Actor.onMovementUndo(_tile, _levelDifference);
+
+		return canMove;
 	}
 
 	q.onAnySkillExecuted <- function( _skill, _targetTile, _targetEntity, _forFree )

@@ -17,14 +17,7 @@
 
 	q.onMovementStep = @(__original) function( _tile, _levelDifference )
 	{
-		local ret = __original(_tile, _levelDifference);
-
-		if (ret)
-		{
-			this.m.Skills.onMovementStep(_tile, _levelDifference);
-		}
-
-		return ret;
+		return onMovementStep(_tile, _levelDifference) && this.m.Skills.onMovementStep(_tile, _levelDifference);
 	}
 
 	// VANILLAFIX: http://battlebrothersgame.com/forums/topic/oncombatstarted-is-not-called-for-ai-characters/
