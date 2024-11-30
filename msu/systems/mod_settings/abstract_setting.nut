@@ -3,8 +3,7 @@
 	static Type = "Abstract";
 	Value = null;
 	BaseValue = null;
-	Locked = null;
-	LockReason = null;
+	Locks = null;
 	BeforeChangeCallbacks = null;
 	AfterChangeCallbacks = null;
 	Persistence = null; //if it should print change to log for further manipulation
@@ -14,8 +13,7 @@
 		base.constructor(_id, _name, _description)
 		this.Value = _value;
 		this.BaseValue = _value;
-		this.Locked = false;
-		this.LockReason = "";
+		this.Locks = {};
 		this.Persistence = true;
 		this.BeforeChangeCallbacks = [];
 		this.AfterChangeCallbacks = [];
@@ -74,7 +72,7 @@
 
 	function set( _newValue, _updateJS = true, _updatePersistence = true, _updateBeforeChangeCallback = true, _force = false, _updateAfterChangeCallback = true)
 	{
-		if (this.Locked)
+		if (this.isLocked())
 		{
 			::logError("Setting \'" + this.Name + "\'' is locked and its value cannot be changed. Lock reason: " + this.getLockReason());
 			return false;
@@ -120,35 +118,47 @@
 		local ret = base.getDescription();
 		if (this.isLocked())
 		{
-			ret += "\n\n[color=" + ::Const.UI.Color.NegativeValue + "]Locked[/color]\n";
-			if (this.LockReason != "")
-			{
-				ret += this.getLockReason();
-			}
+			ret += "\n\n[color=" + ::Const.UI.Color.NegativeValue + "]Locked[/color]\n" + this.getLockReason();
 		}
 		return ret;
 	}
 
 	function isLocked()
 	{
-		return this.Locked;
+		return this.Locks.len() != 0;
 	}
 
 	function getLockReason()
 	{
-		return this.LockReason == "" ? "" : this.LockReason.slice(0, -5);
+		local ret = "";
+		foreach (lockReason in this.Locks)
+		{
+			ret += lockReason + " +++ ";
+		}
+		return ret == "" ? "" : ret.slice(0, -5);
 	}
 
+	// Deprecated - use addLock instead
 	function lock( _lockReason = "" )
 	{
-		this.Locked = true;
-		if (_lockReason != "") this.LockReason += _lockReason + " +++ ";
+		// "MSU_LegacyLock" is for legacy support for the days when settings used to have
+		// a this.Locked Boolean which could be set/unset using lock() and unlock()
+		this.Locks["MSU_LegacyLock" + this.Locks.len()] <- _lockReason;
+	}
+
+	function addLock( _lockID, _lockReason )
+	{
+		this.Locks[_lockID] <- _lockReason;
+	}
+
+	function removeLock( _lockID )
+	{
+		if (_lockID in this.Locks) delete this.Locks[_lockID];
 	}
 
 	function unlock()
 	{
-		this.Locked = false;
-		this.LockReason = "";
+		this.Locks.clear();
 	}
 
 	function getUIData(_flags = [])
@@ -163,9 +173,7 @@
 	function __getSerializationTable()
 	{
 		return {
-			Value = this.getValue(),
-			Locked = this.isLocked(),
-			LockReason = this.getLockReason()
+			Value = this.getValue()
 		};
 	}
 
@@ -173,7 +181,6 @@
 	{
 		this.unlock();
 		this.set(_table.Value, true, false, true, true);
-		if (_table.Locked) this.lock(_table.LockReason);
 	}
 
 	function getSerDeFlag()
@@ -212,8 +219,6 @@
 				this.unlock();
 				this.set(::World.Flags.get(valueFlag), true, false, true, true);
 			}
-			setPropertyIfFlagExists("Locked", modID);
-			setPropertyIfFlagExists("LockReason", modID);
 		}
 		else
 		{
