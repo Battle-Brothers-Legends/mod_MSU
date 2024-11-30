@@ -2,12 +2,13 @@
 {
 	Array = null;
 	Table = null;
-	NextICache = null;
+	IIndexStack = null;
 
 	constructor( _table = null )
 	{
 		this.Array = [];
 		this.Table = {};
+		this.IIndexStack = [];
 		if (_table != null) this.addTable(_table);
 	}
 
@@ -45,10 +46,14 @@
 
 	function _nexti( _prev )
 	{
-		if (_prev == null) this.NextICache = 0;
-		_prev = this.NextICache++;
-
-		return _prev == this.Array.len() ? null : this.Array[_prev];
+		if (_prev == null) this.IIndexStack.push(0);
+		_prev = this.IIndexStack[this.IIndexStack.len() - 1]++;
+		if (_prev == this.Array.len())
+		{
+			this.IIndexStack.pop();
+			return null;
+		}
+		return this.Array[_prev];
 	}
 
 	function _cloned( _original )

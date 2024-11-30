@@ -3,14 +3,15 @@
 	Total = null;
 	Table = null;
 	Forced = null;
-	NextIItems = null;
-	NextIIndex = null;
+	IItems = null;
+	IIndexStack = null;
 
 	constructor( _array = null )
 	{
 		this.Total = 0.0;
 		this.Table = {};
 		this.Forced = [];
+		this.IIndexStack = [];
 		if (_array != null) this.addArray(_array);
 	}
 
@@ -31,19 +32,21 @@
 	{
 		if (_prev == null)
 		{
-			this.NextIItems = ::MSU.Table.keys(this.Table);
-			this.NextIIndex = 0;
+			if (this.IItems == null)
+				this.IItems = ::MSU.Table.keys(this.Table);
+			this.IIndexStack.push(0)
 		}
-		_prev = this.NextIIndex++;
+		_prev = this.IIndexStack[this.IIndexStack.len() - 1]++;
 
 		if (_prev == this.Table.len())
 		{
-			this.NextIItems = null;
-			this.NextIIndex = null;
+			this.IIndexStack.pop();
+			if (this.IIndexStack.len() == 0)
+				this.IItems = null;
 			return null;
 		}
 
-		return this.NextIItems[_prev];
+		return this.IItems[_prev];
 	}
 
 	function toArray( _itemsOnly = true )
