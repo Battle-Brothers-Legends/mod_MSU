@@ -8,6 +8,18 @@
 	::MSU.requireTypeArray("integer", vargv);
 }
 
+::MSU.requireUInt <- function( ... )
+{
+	foreach (value in vargv)
+	{
+		if (typeof value != "integer" || value < 0)
+		{
+			::logError(value + " must have the type: unsigned");
+			throw ::MSU.Exception.InvalidType(value);
+		}
+	}
+}
+
 ::MSU.requireArray <- function( ... )
 {
 	::MSU.requireTypeArray("array", vargv);
