@@ -7,7 +7,7 @@ local function getInQuotes( _string )
 	KeyNotFound = function( _string ) { return format("Key%s not found", getInQuotes(_string)); },
 	NotConnected = function( _string = "" ) { return format("The screen%s does not have a JSHandle (make sure you connect your screens)", getInQuotes(_string)); },
 	AlreadyInState = function( _string = "" ) { return format("Trying to show already visible screen%s or hide an invisible one", getInQuotes(_string)); },
-	InvalidType = function( _string = "" ) { return format("The variable%s is of the wrong type", getInQuotes(_string)); },
+	InvalidType = function( _string = "" ) { return format("The variable %s with the type %s is of the wrong type", getInQuotes(_string), getInQuotes(typeof _string)); },
 	DuplicateKey = function( _string ) { return format("The key%s is already present", getInQuotes(_string)); },
 	InvalidValue = function( _string = "" ) { return format("The value of the variable%s is not acceptable", getInQuotes(_string)); }
 };
