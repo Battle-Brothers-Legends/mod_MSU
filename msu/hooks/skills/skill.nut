@@ -440,6 +440,18 @@
 });
 
 ::MSU.QueueBucket.VeryLate.push(function() {
+	::MSU.MH.hookTree("scripts/skills/skill", function(q) {
+		q.getTooltip = @(__original) function()
+		{
+			local ret = __original();
+			if (!::MSU.isNull(this.getContainer()) && !::MSU.isNull(this.getContainer().getActor()))
+			{
+				this.getContainer().onQueryTooltip(this, ret);
+			}
+			return ret;
+		}
+	});
+
 	::MSU.MH.hook("scripts/skills/skill", function(q) {
 		foreach (func in ::MSU.Skills.PreviewApplicableFunctions)
 		{

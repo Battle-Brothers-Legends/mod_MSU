@@ -9,31 +9,6 @@
 		return ret;
 	}
 
-	q.general_querySkillTooltipData = @(__original) function( _entityId, _skillId )
-	{
-		local ret = __original(_entityId, _skillId);
-
-		if (ret != null)
-		{
-			local skill = ::Tactical.getEntityByID(_entityId).getSkills().getSkillByID(_skillId);
-			skill.getContainer().onQueryTooltip(skill, ret);
-		}
-
-		return ret;
-	}
-
-	q.general_queryStatusEffectTooltipData = @(__original) function( _entityId, _statusEffectId )
-	{
-		local ret = __original(_entityId, _statusEffectId);
-		if (ret != null)
-		{
-			local statusEffect = ::Tactical.getEntityByID(_entityId).getSkills().getSkillByID(_statusEffectId);
-			statusEffect.getContainer().onQueryTooltip(statusEffect, ret);
-		}
-
-		return ret;
-	}
-
 	q.onQueryMSUTooltipData <- function( _data )
 	{
 		return ::MSU.System.Tooltips.getTooltip(_data.modId, _data.elementId).getUIData(_data);
