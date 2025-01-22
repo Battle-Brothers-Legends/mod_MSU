@@ -27,6 +27,21 @@
 		this.m.LevelUpsSpent++;
 	}
 
+	q.onHired = @(__original) function()
+	{
+		__original();
+		this.getSkills().onHired();
+
+		foreach (bro in ::World.getPlayerRoster().getAll())
+		{
+			if (bro.getID() != this.getID())
+			{
+				bro.getSkills().onOtherPlayerHired(this);
+			}
+		}
+
+	}
+
 	q.onSerialize = @(__original) function( _out )
 	{
 		this.getFlags().set("LevelUpsSpent", this.m.LevelUpsSpent);

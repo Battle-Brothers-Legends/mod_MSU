@@ -437,6 +437,17 @@
 
 		return _tooltip;
 	}
+
+// New Events
+	// This event is triggered once for every skill of a player character directly after the onHired event of that player class is triggered
+	q.onHired <- function()
+	{
+	}
+
+	// This event is triggered once for every skill of every other character in the player roster after the onHired event of a player class is triggered
+	q.onOtherPlayerHired <- function( _otherCharacter )
+	{
+	}
 });
 
 ::MSU.QueueBucket.VeryLate.push(function() {

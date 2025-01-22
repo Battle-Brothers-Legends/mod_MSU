@@ -538,4 +538,19 @@
 
 		return ret;
 	}
+
+// New Events
+	// This event is triggered once for a player directly after the onHired event of that characters player class is triggered
+	q.onHired <- function()
+	{
+		this.callSkillsFunction("onHired", []);
+	}
+
+	// This event is triggered once for every other character in the player roster after the onHired event of a player class is triggered
+	q.onOtherPlayerHired <- function( _otherCharacter )
+	{
+		this.callSkillsFunction("onOtherPlayerHired", [
+			_otherCharacter
+		]);
+	}
 });
