@@ -1,4 +1,5 @@
 ::MSU.Utils <- {
+	UIDs = -2147483648,
 	DataType = {
 		Integer = 0,
 		Float = 1,
@@ -242,6 +243,11 @@
 			local timePctText = format("<span style='color:%s;'>%i%% %s</span>", color, ::Math.abs(100 * diff / times[0].TotalTime), diff < 0 ? "faster" : "slower");
 			::logInfo(format("<span>%s: %s ms (Total: %s ms) -- %s</span>", _functions[i][0] + "", timePerIterationText, totalTimeText, i == 0 ? "base time" : timePctText));
 		}
+	}
+
+	function generateUID()
+	{
+		return ::MSU.Utils.UID++;
 	}
 
 	// Deprecated - use ::MSU.AI.addBehavior instead

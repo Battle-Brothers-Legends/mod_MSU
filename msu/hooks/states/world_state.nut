@@ -293,6 +293,7 @@
 	{
 		::MSU.System.ModSettings.flagSerialize(_out);
 		::World.Flags.set("MSU.LastDayMorningEventCalled", ::World.Assets.getLastDayMorningEventCalled());
+		::World.Flags.set("MSU_LastUID", ::MSU.Utils.UID);
 		__original(_out);
 		::MSU.System.Serialization.clearFlags();
 	}
@@ -307,6 +308,10 @@
 		else
 		{
 			::World.Assets.setLastDayMorningEventCalled(::World.getTime().Days);
+		}
+		if (::World.Flags.has("MSU_LastUID"))
+		{
+			::MSU.Utils.UID = ::World.Flags.get("MSU_LastUID");
 		}
 		::MSU.System.ModSettings.flagDeserialize(_in);
 		::MSU.System.Serialization.clearFlags();
