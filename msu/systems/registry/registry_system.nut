@@ -106,7 +106,6 @@
 		}
 		// rate limit handling; would actually need to check for rate limits... But I suppose not many players will hit that.
 		if (modInfos.len() > 0) ::MSU.Mod.PersistentData.createFile("StoredModUpdates", modInfos);
-		// this.__addDebugModVersions(modInfos);
 		return modInfos;
 	}
 
