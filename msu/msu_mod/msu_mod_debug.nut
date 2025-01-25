@@ -4,6 +4,7 @@
 	"skills" : false,
 	"keybinds" : false,
 	"persistence" : false,
+	"serde" : false,
 	"modsettings" : false,
 	"tooltip" : false,
 	"performance" : false
