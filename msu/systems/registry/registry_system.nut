@@ -96,7 +96,8 @@
 				sources = {},
 				isNew = true
 			};
-			modInfos[modID].UpdateInfo.isNew = !(modID in storedInfo) || (storedInfo[modID].UpdateInfo.availableVersion != modInfos[modID].UpdateInfo.availableVersion);
+			// new patch notes if: Not in stored updates == not installed last time, no update info stored == no patch available last time or could not be fetched, or stored version != new version
+			modInfos[modID].UpdateInfo.isNew = !(modID in storedInfo) || !("UpdateInfo" in storedInfo[modID]) || (storedInfo[modID].UpdateInfo.availableVersion != modInfos[modID].UpdateInfo.availableVersion);
 			foreach (modSource in mod.Registry.__ModSources)
 			{
 				local sourceKey = ::MSU.System.Registry.ModSourceDomain.getKeyForValue(modSource.ModSourceDomain);
