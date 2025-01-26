@@ -97,7 +97,7 @@ MSUConnection.prototype.compareModVersions = function (_modVersionData)
 
 MSUConnection.prototype.showModUpdates = function (_modVersionData)
 {
-	var transformText = function(_text)
+	var transformMarkdownToHTML = function(_text)
 	{
 		// Change line ending to <br>, replace # markdown with <h> tags, replace markdown links with clickable spans
 		var asLines = _text.split(/\r?\n/);
@@ -159,7 +159,7 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 		// Add update patch notes, with a click handler to show/hide them
 		if (updateInfo.changes)
 		{
-			var neatText = transformText(updateInfo.changes);
+			var neatText = transformMarkdownToHTML(updateInfo.changes);
 			var patchNotesInfoRow = $('<div class="description-font-normal font-color-description">Click to hide patch notes</div>')
 				.appendTo(modInfoContainer);
 			var descriptionRow = $('<div class="msu-mod-info-description description-font-normal font-color-description"/>')
