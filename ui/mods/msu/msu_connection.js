@@ -111,7 +111,7 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 			}
 			if (hashCount > 0) line = "<h" + hashCount + ">" + line.slice(hashCount) + "</h" + hashCount + ">";
 			else line += "<br>";
-			line = line.replace(/\[(.+)\]\((.+)\)/g, '<span class="msu-popup-link" onclick="openURL(\'$2\')">$1</a>'); // replace link with onClick element to open in browser
+			line = line.replace(/\[(.+)\]\((.+)\)/g, '<span class="msu-popup-link" onclick="openURL(\'$2\')">$1</span>'); // replace link with onClick element to open in browser
 			ret += line;
 		}
 		return ret;
