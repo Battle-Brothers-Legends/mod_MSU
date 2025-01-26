@@ -7,13 +7,12 @@
 	// This is one is set via Mod.Registry.addModSource(..., {Prefix = ...}) -> base.constructor()
 	Prefix = ""
 
-	function getUpdateURL()
+	function setUpdateCheckURL()
 	{
-		local capture = this.Regex.capture(this.__URL);
-		local owner = ::MSU.regexMatch(capture, this.__URL, 1);
-		local repo = ::MSU.regexMatch(capture, this.__URL, 2);
-		return format("https://api.github.com/repos/%s/%s/git/matching-refs/tags/%s?per_page=100",
-			owner, repo, this.Prefix)
+		local capture = this.Regex.capture(this.__BaseURL);
+		local owner = ::MSU.regexMatch(capture, this.__BaseURL, 1);
+		local repo = ::MSU.regexMatch(capture, this.__BaseURL, 2);
+		this.__UpdateCheckURL = format("https://api.github.com/repos/%s/%s/git/matching-refs/tags/%s?per_page=100", owner, repo, this.Prefix);
 	}
 
 	function extractRelease(_data) {

@@ -97,9 +97,31 @@ MSUConnection.prototype.compareModVersions = function (_modVersionData)
 
 MSUConnection.prototype.showModUpdates = function (_modVersionData)
 {
+	var transformMarkdownToHTML = function(_text)
+	{
+		// Change line ending to <br>, replace # markdown with <h> tags, replace markdown links with clickable spans
+		var asLines = _text.split(/\r?\n/);
+		var ret = "";
+		for (var i = 0; i < asLines.length; i++) {
+			var line = asLines[i].trim();
+			var hashCount = 0;
+			for (var j = 0; j < line.length; j++) {
+				if (line[j] == "#") hashCount++
+				else break
+			}
+			if (hashCount > 0) line = "<h" + hashCount + ">" + line.slice(hashCount) + "</h" + hashCount + ">";
+			else line += "<br>";
+			line = line.replace(/\[(.+)\]\((.+)\)/g, '<span class="msu-popup-link" onclick="openURL(\'$2\')">$1</span>'); // replace link with onClick element to open in browser
+			ret += line;
+		}
+		return ret;
+	}
+
 	var self = this;
 	var numUpdates = 0;
+	var hasNew = false;
 	var numMods = Object.keys(_modVersionData).length
+	var objectsToAdd = [];
 	$.each(_modVersionData, function (_modID, _modInfo)
 	{
 		if (_modInfo.UpdateInfo === undefined)
@@ -134,21 +156,52 @@ MSUConnection.prototype.showModUpdates = function (_modVersionData)
 			});
 		})
 
-		// Add update text
+		// Add update patch notes, with a click handler to show/hide them
 		if (updateInfo.changes)
 		{
+			var neatText = transformMarkdownToHTML(updateInfo.changes);
+			var patchNotesInfoRow = $('<div class="description-font-normal font-color-description">Click to hide patch notes</div>')
+				.appendTo(modInfoContainer);
 			var descriptionRow = $('<div class="msu-mod-info-description description-font-normal font-color-description"/>')
-				.html(updateInfo.changes.replace(/(?:\r\n|\r|\n)/g, '<br>'))
-				.appendTo(modInfoContainer)
+				.html(neatText)
+				.appendTo(modInfoContainer);
+			modInfoContainer.click(function(){
+				if (descriptionRow.html() == ""){
+					patchNotesInfoRow.text("Click to hide patch notes");
+					descriptionRow.html(neatText);
+				}
+				else {
+					patchNotesInfoRow.text("Click to show patch notes");
+					descriptionRow.html("");
+				}
+			})
 		}
-		MSU.Popup.addListContent(modInfoContainer)
+		// New patches up top, old patches bottom
+		if (updateInfo.isNew)
+		{
+			var isNewSymbol = $('<div class="msu-popup-is-new-symbol"/>')
+				.appendTo(modInfoContainer);
+			objectsToAdd.push(modInfoContainer);
+			hasNew = true;
+		}
+		else
+		{
+			objectsToAdd.splice(0, 0, modInfoContainer);
+		}
 	});
+
 	if (numUpdates == 0)
 		return;
+
+	$.each(objectsToAdd, function(_, _modInfoContainer){
+		MSU.Popup.addListContent(_modInfoContainer)
+	})
+	delete objectsToAdd;
+
 	var checkText = "" + numMods + (numMods == 1 ? " mod" : " mods") + " checked<br>";
 	checkText += numUpdates + (numUpdates == 1 ? " update" : " updates");
 	MSU.Popup.setSmallContainerInfo(checkText);
-	MSU.Popup.setState(MSU.Popup.mState.Small);
+	MSU.Popup.setState(hasNew ? MSU.Popup.mState.Full : MSU.Popup.mState.Small);
 }
 
 // this should be reworked if/when we added JS side settings callbacks

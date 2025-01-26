@@ -8,6 +8,12 @@
 	background-repeat: no-repeat;
 	z-index: 9999 !important;
 }
+.msu-popup-link
+{
+	color: lightblue;
+	text-decoration: underline;
+	cursor: default;
+}
 
 .msu-popup-small
 {
@@ -66,7 +72,6 @@
 	color: white;
 	font-family: monospace, arial;
 	font-size: 20;
-	background-color: rgba(0, 0, 0, 1.0);
 	position: relative;
 }
 
@@ -88,13 +93,13 @@
 	overflow: hidden;
 	position: relative;
 	color: #dda21f;
-	padding-top: 1.5rem;
-
-	background-image: url("coui://gfx/ui/skin/list_item_03.png");
-	background-size: 100% 100%;
+	padding-top: 0.5rem;
+	padding-bottom: 0.5rem;
 	display: flex;
 	flex-wrap: wrap;
 	justify-content: center;
+	border: 10px solid transparent;
+	border-image: url("coui://gfx/ui/skin/list_item_03.png") 10 fill  stretch;
 }
 
 .msu-mod-info-container > div
@@ -103,7 +108,14 @@
 	height: auto;
 	overflow:auto;
 	word-wrap: break-word;
-	margin-bottom: 1.5rem;
+}
+.msu-mod-info-description h1,
+.msu-mod-info-description h2,
+.msu-mod-info-description h3,
+.msu-mod-info-description h4,
+.msu-mod-info-description h5
+{
+	margin: 0;
 }
 
 .msu-mod-info-container .msu-mod-version-row .msu-mod-version-info
@@ -116,6 +128,17 @@
 	float: right;
 	width: 3.2rem;
 	height: 3.2rem;
+}
+
+.msu-mod-info-container .msu-popup-is-new-symbol
+{
+	width: 2rem;
+	height: 2rem;
+	position:absolute;
+	top: 0;
+	right: 0;
+	background-image: url("coui://gfx/ui/icons/special.png");
+	background-size: 100% 100%;
 }
 
 .msu-mod-info-container .ui-control.button,

@@ -57,7 +57,7 @@
 		{
 			if (mod.Registry.hasUpdateSource())
 			{
-				ret[mod.getID()] <- mod.Registry.getUpdateSource().getUpdateURL();
+				ret[mod.getID()] <- mod.Registry.getUpdateSource().getUpdateCheckURL();
 			}
 		}
 		return ret;
@@ -65,6 +65,11 @@
 
 	function checkIfModVersionsAreNew( _modVersionData )
 	{
+		local storedInfo = {};
+		if (::MSU.Mod.PersistentData.hasFile("StoredModUpdates"))
+		{
+			storedInfo = ::MSU.Mod.PersistentData.readFile("StoredModUpdates");
+		}
 		local modInfos = {};
 		foreach (modID, modData in _modVersionData)
 		{
@@ -89,13 +94,19 @@
 				updateType = type,
 				changes = release.Changes,
 				sources = {},
+				isNew = true
 			};
+			// new patch notes if: Not in stored updates == not installed last time, no update info stored == no patch available last time or could not be fetched, or stored version != new version
+			modInfos[modID].UpdateInfo.isNew = !(modID in storedInfo) || !("UpdateInfo" in storedInfo[modID]) || (storedInfo[modID].UpdateInfo.availableVersion != modInfos[modID].UpdateInfo.availableVersion);
 			foreach (modSource in mod.Registry.__ModSources)
 			{
 				local sourceKey = ::MSU.System.Registry.ModSourceDomain.getKeyForValue(modSource.ModSourceDomain);
-				modInfos[modID].UpdateInfo.sources[sourceKey] <- {URL = modSource.getURL(), icon = modSource.Icon};
+				local targetURL = modSource.getTargetURL();
+				modInfos[modID].UpdateInfo.sources[sourceKey] <- {URL = targetURL == null ? modSource.getBaseURL() : targetURL, icon = modSource.Icon};
 			}
 		}
+		// rate limit handling; would actually need to check for rate limits... But I suppose not many players will hit that.
+		if (modInfos.len() > 0) ::MSU.Mod.PersistentData.createFile("StoredModUpdates", modInfos);
 		return modInfos;
 	}
 
